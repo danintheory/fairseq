@@ -95,10 +95,10 @@ def main(cfg: FairseqConfig) -> None:
     criterion = task.build_criterion(cfg.criterion)
 
     # print(cfg)
-    logger.info(model)
-    logger.info(cfg.model)
-    logger.info('is flushed?')
-    params = model.parameters()
+    # logger.info(model)
+    # logger.info(cfg.model)
+    # logger.info('is flushed?')
+    params = list(model.parameters())
     print(params[0])
 
 
