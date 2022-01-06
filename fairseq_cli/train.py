@@ -94,40 +94,6 @@ def main(cfg: FairseqConfig) -> None:
         model = task.build_model(cfg.model)
     criterion = task.build_criterion(cfg.criterion)
 
-    # print(cfg)
-    # logger.info(model)
-    # logger.info(cfg.model)
-    # logger.info('is flushed?')
-    # params = list(model.parameters())
-
-    # logger.info(dir(params[0]))
-    # logger.info('dump')
-    # for param in params:
-    #     logger.info(param.name)
-    #     logger.info(param)
-
-    # for idx, (name, param) in enumerate(model.named_parameters()):
-    #     print('index: ', idx)
-    #     print(name, param.size())
-    #     param_mean = torch.mean(param)
-    #     param_var = torch.var(param)
-    #     print('mean: ', param_mean, 'var: ', param_var)
-
-    # for idx, (name, param) in enumerate(model.named_parameters()):
-    #     # print('index: ', idx)
-    #     # print(name, param.size())
-
-    #     # print(idx)
-    #     # print(name.split('.'))
-    #     # print(name.split('.')[-2].split('_'))
-    #     if name.split('.')[-2].split('_')[-1] == 'norm':
-    #         param_mean = torch.mean(param)
-    #         print(name, ' mean: ', param_mean)
-
-
-
-    # import pdb; pdb.set_trace()
-
     logger.info(model)
     logger.info("task: {}".format(task.__class__.__name__))
     logger.info("model: {}".format(model.__class__.__name__))
