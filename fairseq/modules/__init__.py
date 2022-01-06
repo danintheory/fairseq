@@ -28,6 +28,7 @@ from .linearized_convolution import LinearizedConvolution
 from .location_attention import LocationAttention
 from .lstm_cell_with_zoneout import LSTMCellWithZoneOut
 from .multihead_attention import MultiheadAttention
+from .normalization_reparam import LayerNormRepara, BatchNorm2dRepara
 from .positional_embedding import PositionalEmbedding
 from .same_pad import SamePad
 from .scalar_bias import ScalarBias
@@ -43,6 +44,7 @@ __all__ = [
     "AdaptiveInput",
     "AdaptiveSoftmax",
     "BaseLayer",
+    "BatchNorm2dRepara",
     "BeamableMM",
     "CharacterTokenEmbedder",
     "ConvTBC",
@@ -61,6 +63,7 @@ __all__ = [
     "KmeansVectorQuantizer",
     "LayerDropModuleList",
     "LayerNorm",
+    "LayerNormRepara",
     "LearnedPositionalEmbedding",
     "LightweightConv1dTBC",
     "LightweightConv",

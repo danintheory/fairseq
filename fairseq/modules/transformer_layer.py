@@ -8,7 +8,7 @@ from typing import Dict, List, Optional
 import torch
 import torch.nn as nn
 from fairseq import utils
-from fairseq.modules import LayerNorm, MultiheadAttention
+from fairseq.modules import LayerNorm, LayerNormRepara, MultiheadAttention
 from fairseq.modules.fairseq_dropout import FairseqDropout
 from fairseq.modules.quant_noise import quant_noise
 from torch import Tensor
@@ -41,8 +41,8 @@ class TransformerEncoderLayerBase(nn.Module):
         self.gamma = cfg.gamma
         self.new_init = cfg.new_init
         self.self_attn = self.build_self_attention(self.embed_dim, cfg)
-        print(cfg.ln_param, 'this is ln param')
-        self.self_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        # self.self_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        self.self_attn_layer_norm = LayerNormRepara(self.embed_dim, parameterization=cfg.ln_param)
         self.dropout_module = FairseqDropout(
             cfg.dropout, module_name=self.__class__.__name__
         )
@@ -69,7 +69,8 @@ class TransformerEncoderLayerBase(nn.Module):
         )
 
 
-        self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        # self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        self.final_layer_norm = LayerNormRepara(self.embed_dim, parameterization=cfg.ln_param)
 
         if self.new_init:
             CW=1.0
@@ -232,7 +233,8 @@ class TransformerDecoderLayerBase(nn.Module):
             add_zero_attn=add_zero_attn,
         )
         self.attn_ln = (
-            LayerNorm(self.embed_dim)
+            # LayerNorm(self.embed_dim)
+            LayerNormRepara(self.embed_dim, parameterization=cfg.ln_param)
             if utils.safe_getattr(cfg, "scale_attn", False)
             else None
         )
@@ -255,17 +257,20 @@ class TransformerDecoderLayerBase(nn.Module):
         )
         self.normalize_before = cfg.decoder.normalize_before
 
-        self.self_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        # self.self_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        self.self_attn_layer_norm = LayerNormRepara(self.embed_dim, parameterization=cfg.ln_param)
 
         if no_encoder_attn:
             self.encoder_attn = None
             self.encoder_attn_layer_norm = None
         else:
             self.encoder_attn = self.build_encoder_attention(self.embed_dim, cfg)
-            self.encoder_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+            # self.encoder_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+            self.encoder_attn_layer_norm = LayerNormRepara(self.embed_dim, parameterization=cfg.ln_param)
 
         self.ffn_layernorm = (
-            LayerNorm(cfg.decoder.ffn_embed_dim)
+            # LayerNorm(cfg.decoder.ffn_embed_dim)
+            LayerNormRepara(cfg.decoder.ffn_embed_dim, parameterization=cfg.ln_param)
             if utils.safe_getattr(cfg, "scale_fc", False)
             else None
         )
@@ -293,7 +298,8 @@ class TransformerDecoderLayerBase(nn.Module):
             self.quant_noise_block_size,
         )
 
-        self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        # self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+        self.final_layer_norm = LayerNormRepara(self.embed_dim, parameterization=cfg.ln_param)
         self.need_attn = True
 
         self.onnx_trace = False
