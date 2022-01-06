@@ -222,7 +222,8 @@ class TransformerDecoderLayerBase(nn.Module):
         self.quant_noise_block_size = cfg.quant_noise.pq_block_size
 
         self.cross_self_attention = cfg.cross_self_attention
-
+        self.gamma = cfg.gamma
+        self.new_init = cfg.new_init
         self.self_attn = self.build_self_attention(
             self.embed_dim,
             cfg,
@@ -296,7 +297,7 @@ class TransformerDecoderLayerBase(nn.Module):
 
         self.onnx_trace = False
 
-        self.gamma = cfg.gamma
+
 
         if self.new_init:
             CW=1.0
