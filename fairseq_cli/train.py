@@ -110,7 +110,7 @@ def main(cfg: FairseqConfig) -> None:
         print('index: ', idx)
         print(name, param.size())
         param_mean = torch.mean(param)
-        param_var = torch.variance(param)
+        param_var = torch.var(param)
         print('mean: %f', 'var: %f' % (param_mean, param_var))
 
 
