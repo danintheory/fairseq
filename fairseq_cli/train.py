@@ -126,7 +126,7 @@ def main(cfg: FairseqConfig) -> None:
 
 
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
 
     logger.info(model)
     logger.info("task: {}".format(task.__class__.__name__))
