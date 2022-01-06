@@ -94,7 +94,11 @@ def main(cfg: FairseqConfig) -> None:
         model = task.build_model(cfg.model)
     criterion = task.build_criterion(cfg.criterion)
 
+    print(cfg)
     print(model)
+    parmas = model.parameters()
+    print(params[0])
+
 
     import pdb; pdb.set_trace()
 
