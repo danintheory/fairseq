@@ -109,7 +109,9 @@ def main(cfg: FairseqConfig) -> None:
     for idx, (name, param) in enumerate(model.named_parameters()):
         print('index: ', idx)
         print(name, param.size())
-        print(param)
+        param_mean = torch.mean(param)
+        param_var = torch.variance(param)
+        print('mean: %f', 'var: %f' % (param_mean, param_var))
 
 
     import pdb; pdb.set_trace()

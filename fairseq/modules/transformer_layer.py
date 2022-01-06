@@ -71,9 +71,6 @@ class TransformerEncoderLayerBase(nn.Module):
         self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
 
         if self.new_init:
-            print('here in new init in encoder')
-            print(self.gamma)
-            print('that was gamma')
             CW=1.0
             CX=2.0*(1.0-self.gamma*self.gamma)
             S = self.embed_dim
@@ -303,9 +300,6 @@ class TransformerDecoderLayerBase(nn.Module):
 
 
         if self.new_init:
-            print('here in new init in decoder')
-            print(self.gamma)
-            print('that was gamma')
             CW=1.0
             CX=2.0*(1.0-self.gamma*self.gamma)
             S = self.embed_dim
