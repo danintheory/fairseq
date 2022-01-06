@@ -65,6 +65,8 @@ class TransformerEncoderLayerBase(nn.Module):
             self.quant_noise_block_size,
         )
 
+        print(cfg)
+
         self.gamma = cfg.gamma
         self.new_init = cfg.new_init
 
@@ -92,6 +94,8 @@ class TransformerEncoderLayerBase(nn.Module):
         )
 
     def build_self_attention(self, embed_dim, cfg):
+        print('inside build')
+        print(cfg)
         return MultiheadAttention(
             embed_dim,
             cfg.encoder.attention_heads,
