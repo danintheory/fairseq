@@ -116,7 +116,7 @@ def main(cfg: FairseqConfig) -> None:
     for idx, (name, param) in enumerate(model.named_parameters()):
         # print('index: ', idx)
         # print(name, param.size())
-        if name.split('.')[-2].split('-') == 'norm':
+        if name.split('.')[-2].split('-')[-1] == 'norm':
             param_mean = torch.mean(param)
             print(name, ' mean: ', param_mean)
 
