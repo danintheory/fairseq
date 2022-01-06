@@ -117,10 +117,10 @@ def main(cfg: FairseqConfig) -> None:
         # print('index: ', idx)
         # print(name, param.size())
 
-        print(idx)
-        print(name.split('.'))
-        print(name.split('.')[-2].split('-'))
-        if name.split('.')[-2].split('-')[-1] == 'norm':
+        # print(idx)
+        # print(name.split('.'))
+        # print(name.split('.')[-2].split('_'))
+        if name.split('.')[-2].split('_')[-1] == 'norm':
             param_mean = torch.mean(param)
             print(name, ' mean: ', param_mean)
 
