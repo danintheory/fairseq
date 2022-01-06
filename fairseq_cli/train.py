@@ -106,12 +106,20 @@ def main(cfg: FairseqConfig) -> None:
     #     logger.info(param.name)
     #     logger.info(param)
 
+    # for idx, (name, param) in enumerate(model.named_parameters()):
+    #     print('index: ', idx)
+    #     print(name, param.size())
+    #     param_mean = torch.mean(param)
+    #     param_var = torch.var(param)
+    #     print('mean: ', param_mean, 'var: ', param_var)
+
     for idx, (name, param) in enumerate(model.named_parameters()):
-        print('index: ', idx)
-        print(name, param.size())
-        param_mean = torch.mean(param)
-        param_var = torch.var(param)
-        print('mean: ', param_mean, 'var: ', param_var)
+        # print('index: ', idx)
+        # print(name, param.size())
+        if name.split('.')[-2].split('-') == 'norm':
+            param_mean = torch.mean(param)
+            print(name, ' mean: ', param_mean)
+
 
 
     import pdb; pdb.set_trace()
