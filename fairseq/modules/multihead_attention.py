@@ -134,16 +134,16 @@ class MultiheadAttention(nn.Module):
         CU=1.0*(1.0-gamma*gamma)
         if self.qkv_same_dim:
             
-            nn.init.uniform_(self.k_proj.weight, -np.sqrt(3.0*CK/S), np.sqrt(3.0*CK/S))
-            nn.init.uniform_(self.v_proj.weight, -np.sqrt(3.0*CV/S), np.sqrt(3.0*CV/S))
+            nn.init.uniform_(self.k_proj.weight, -(3.0*CK/S)**(1/2), (3.0*CK/S)**(1/2))
+            nn.init.uniform_(self.v_proj.weight, -(3.0*CV/S)**(1/2), (3.0*CV/S)**(1/2))
         else:
             # the natural generalization
-            nn.init.uniform_(self.k_proj.weight, -np.sqrt(3.0*CK/self.kdim), np.sqrt(3.0*CK/self.kdim))
-            nn.init.uniform_(self.v_proj.weight, -np.sqrt(3.0*CV/self.vdim), np.sqrt(3.0*CV/self.vdim))
+            nn.init.uniform_(self.k_proj.weight, -(3.0*CK/self.kdim)**(1/2), (3.0*CK/self.kdim)**(1/2))
+            nn.init.uniform_(self.v_proj.weight, -(3.0*CV/self.vdim)**(1/2), (3.0*CV/self.vdim)**(1/2))
 
         # these only care about S
-        nn.init.uniform_(self.q_proj.weight, -np.sqrt(3.0*CQ/S), np.sqrt(3.0*CQ/S))
-        nn.init.uniform_(self.out_proj.weight, -np.sqrt(3.0*CU/S), np.sqrt(3.0*CU/S))
+        nn.init.uniform_(self.q_proj.weight, -(3.0*CQ/S)**(1/2), (3.0*CQ/S)**(1/2))
+        nn.init.uniform_(self.out_proj.weight, -(3.0*CU/S)**(1/2), (3.0*CU/S)**(1/2))
 
 
         # zero out the biases

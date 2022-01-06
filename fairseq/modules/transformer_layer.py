@@ -78,8 +78,8 @@ class TransformerEncoderLayerBase(nn.Module):
             CX=2.0*(1.0-self.gamma*self.gamma)
             S = self.embed_dim
             MLP_multiplier = cfg.encoder.ffn_embed_dim / S 
-            nn.init.uniform_(self.fc1.weight, -np.sqrt(3.0*CW/S), np.sqrt(3.0*CW/S))
-            nn.init.uniform_(self.fc2.weight, -np.sqrt(3.0*CX/(MLP_multiplier*S)), np.sqrt(3.0*CX/(MLP_multiplier*S)))
+            nn.init.uniform_(self.fc1.weight, -(3.0*CW/S)**(1/2), (3.0*CW/S)**(1/2))
+            nn.init.uniform_(self.fc2.weight, -(3.0*CX/(MLP_multiplier*S))**(1/2), (3.0*CX/(MLP_multiplier*S))**(1/2))
             torch.nn.init.zeros_(self.fc1.bias)
             torch.nn.init.zeros_(self.fc2.bias)
 
@@ -310,8 +310,8 @@ class TransformerDecoderLayerBase(nn.Module):
             CX=2.0*(1.0-self.gamma*self.gamma)
             S = self.embed_dim
             MLP_multiplier = cfg.encoder.ffn_embed_dim / S 
-            nn.init.uniform_(self.fc1.weight, -np.sqrt(3.0*CW/S), np.sqrt(3.0*CW/S))
-            nn.init.uniform_(self.fc2.weight, -np.sqrt(3.0*CX/(MLP_multiplier*S)), np.sqrt(3.0*CX/(MLP_multiplier*S)))
+            nn.init.uniform_(self.fc1.weight, -(3.0*CW/S)**(1/2), (3.0*CW/S)**(1/2))
+            nn.init.uniform_(self.fc2.weight, -(3.0*CX/(MLP_multiplier*S))**(1/2), (3.0*CX/(MLP_multiplier*S))**(1/2))
             torch.nn.init.zeros_(self.fc1.bias)
             torch.nn.init.zeros_(self.fc2.bias)
 
