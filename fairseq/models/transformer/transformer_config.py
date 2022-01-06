@@ -102,6 +102,9 @@ class TransformerConfig(FairseqDataclass):
     new_init: bool = field(
         default=False, metadata={"help": "use the new init for residuals"}
     )
+    ln_param: str = field(
+        default='default', metadata={"help": "default, centered, or exponential"}
+    )
     activation_dropout: float = field(
         default=0.0,
         metadata={

@@ -41,6 +41,7 @@ class TransformerEncoderLayerBase(nn.Module):
         self.gamma = cfg.gamma
         self.new_init = cfg.new_init
         self.self_attn = self.build_self_attention(self.embed_dim, cfg)
+        print(cfg.ln_param, 'this is ln param')
         self.self_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
         self.dropout_module = FairseqDropout(
             cfg.dropout, module_name=self.__class__.__name__
