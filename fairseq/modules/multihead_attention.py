@@ -153,10 +153,10 @@ class MultiheadAttention(nn.Module):
             torch.nn.init.zeros_(self.out_proj.bias)
             # nn.init.constant_(self.out_proj.bias, 0.0)
         if self.k_proj is not None:
-            torch.nn.init.zeros_(self.k_proj)
+            torch.nn.init.zeros_(self.k_proj.bias)
             # nn.init.xavier_normal_(self.bias_k)
         if self.v_proj is not None:
-            torch.nn.init.zeros_(self.v_proj)
+            torch.nn.init.zeros_(self.v_proj.bias)
             # nn.init.xavier_normal_(self.bias_v)
         if self.q_proj.bias is not None:
             torch.nn.init.zeros_(self.q_proj.bias)
