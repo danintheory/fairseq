@@ -98,13 +98,18 @@ def main(cfg: FairseqConfig) -> None:
     # logger.info(model)
     # logger.info(cfg.model)
     # logger.info('is flushed?')
-    params = list(model.parameters())
+    # params = list(model.parameters())
 
-    logger.info(dir(params[0]))
-    logger.info('dump')
-    for param in params:
-        logger.info(param.name)
-        logger.info(param)
+    # logger.info(dir(params[0]))
+    # logger.info('dump')
+    # for param in params:
+    #     logger.info(param.name)
+    #     logger.info(param)
+
+    for idx, (name, param) in enumerate(model.named_parameters()):
+        print('index: ', idx)
+        print(name, param.size())
+        print(param)
 
 
     import pdb; pdb.set_trace()
