@@ -38,6 +38,8 @@ class TransformerEncoderLayerBase(nn.Module):
         self.embed_dim = cfg.encoder.embed_dim
         self.quant_noise = cfg.quant_noise.pq
         self.quant_noise_block_size = cfg.quant_noise.pq_block_size
+        self.gamma = cfg.gamma
+        self.new_init = cfg.new_init
         self.self_attn = self.build_self_attention(self.embed_dim, cfg)
         self.self_attn_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
         self.dropout_module = FairseqDropout(
@@ -65,10 +67,6 @@ class TransformerEncoderLayerBase(nn.Module):
             self.quant_noise_block_size,
         )
 
-        print(cfg)
-
-        self.gamma = cfg.gamma
-        self.new_init = cfg.new_init
 
         self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
 
@@ -94,8 +92,6 @@ class TransformerEncoderLayerBase(nn.Module):
         )
 
     def build_self_attention(self, embed_dim, cfg):
-        print('inside build')
-        print(cfg)
         return MultiheadAttention(
             embed_dim,
             cfg.encoder.attention_heads,
