@@ -114,6 +114,8 @@ class MultiheadAttention(nn.Module):
         nn.init.xavier_uniform_(self.out_proj.weight)
         if self.out_proj.bias is not None:
             nn.init.constant_(self.out_proj.bias, 0.0)
+
+        # this is maybe a bug in fairseq?
         if self.bias_k is not None:
             nn.init.xavier_normal_(self.bias_k)
         if self.bias_v is not None:
@@ -150,11 +152,11 @@ class MultiheadAttention(nn.Module):
         if self.out_proj.bias is not None:
             torch.nn.init.zeros_(self.out_proj.bias)
             # nn.init.constant_(self.out_proj.bias, 0.0)
-        if self.bias_k is not None:
-            torch.nn.init.zeros_(self.bias_k)
+        if self.k_proj is not None:
+            torch.nn.init.zeros_(self.k_proj)
             # nn.init.xavier_normal_(self.bias_k)
-        if self.bias_v is not None:
-            torch.nn.init.zeros_(self.bias_v)
+        if self.v_proj is not None:
+            torch.nn.init.zeros_(self.v_proj)
             # nn.init.xavier_normal_(self.bias_v)
         if self.q_proj.bias is not None:
             torch.nn.init.zeros_(self.q_proj.bias)

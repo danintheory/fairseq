@@ -71,7 +71,7 @@ class TransformerEncoderLayerBase(nn.Module):
         self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
 
         if self.new_init:
-            print('here in new init in decoder')
+            print('here in new init in encoder')
             print(self.gamma)
             print('that was gamma')
             CW=1.0
