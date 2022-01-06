@@ -103,8 +103,8 @@ def main(cfg: FairseqConfig) -> None:
     logger.info(dir(params[0]))
     logger.info('dump')
     for param in params:
-        logger.info('another')
-        logger.info('param')
+        logger.info(param.name)
+        logger.info(param)
 
 
     import pdb; pdb.set_trace()
