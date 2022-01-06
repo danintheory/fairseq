@@ -96,6 +96,12 @@ class TransformerConfig(FairseqDataclass):
     attention_dropout: float = field(
         default=0.0, metadata={"help": "dropout probability for attention weights"}
     )
+    gamma: float = field(default=1.0, 
+        metadata={"help": "weight of identity branch of residual"}
+    )
+    new_init: bool = field(
+        default=False, metadata={"help": "use the new init for residuals"}
+    )
     activation_dropout: float = field(
         default=0.0,
         metadata={

@@ -37,6 +37,8 @@ class MultiheadAttention(nn.Module):
         encoder_decoder_attention=False,
         q_noise=0.0,
         qn_block_size=8,
+        new_init=False,
+        gamma = 1
     ):
         super().__init__()
         self.embed_dim = embed_dim
@@ -84,7 +86,13 @@ class MultiheadAttention(nn.Module):
 
         self.add_zero_attn = add_zero_attn
 
-        self.reset_parameters()
+        
+        self.gamma = gamma
+
+        if new_init:
+            self.new_init_parameters()
+        else:
+            self.reset_parameters()
 
         self.onnx_trace = False
 
@@ -110,6 +118,46 @@ class MultiheadAttention(nn.Module):
             nn.init.xavier_normal_(self.bias_k)
         if self.bias_v is not None:
             nn.init.xavier_normal_(self.bias_v)
+
+
+    def new_init_parameters(self):
+        '''
+        Implements the new init, correct for relu
+        '''
+        gamma = self.gamma
+        S = self.embed_dim
+
+        # these are correct for relu ONLY
+        CQ=1.0
+        CK=1.0
+        CV=1.0
+        CU=1.0*(1.0-gamma*gamma)
+        if self.qkv_same_dim:
+            
+            nn.init.uniform_(self.k_proj.weight, -np.sqrt(3.0*CK/S), np.sqrt(3.0*CK/S))
+            nn.init.uniform_(self.v_proj.weight, -np.sqrt(3.0*CV/S), np.sqrt(3.0*CV/S))
+        else:
+            # the natural generalization
+            nn.init.uniform_(self.k_proj.weight, -np.sqrt(3.0*CK/self.kdim), np.sqrt(3.0*CK/self.kdim))
+            nn.init.uniform_(self.v_proj.weight, -np.sqrt(3.0*CV/self.vdim), np.sqrt(3.0*CV/self.vdim))
+
+        # these only care about S
+        nn.init.uniform_(self.q_proj.weight, -np.sqrt(3.0*CQ/S), np.sqrt(3.0*CQ/S))
+        nn.init.uniform_(self.out_proj.weight, -np.sqrt(3.0*CU/S), np.sqrt(3.0*CU/S))
+
+
+        # zero out the biases
+        if self.out_proj.bias is not None:
+            torch.nn.init.zeros_(self.out_proj.bias)
+            # nn.init.constant_(self.out_proj.bias, 0.0)
+        if self.bias_k is not None:
+            torch.nn.init.zeros_(self.bias_k)
+            # nn.init.xavier_normal_(self.bias_k)
+        if self.bias_v is not None:
+            torch.nn.init.zeros_(self.bias_v)
+            # nn.init.xavier_normal_(self.bias_v)
+        if self.q_proj.bias is not None:
+            torch.nn.init.zeros_(self.q_proj.bias)
 
     def forward(
         self,

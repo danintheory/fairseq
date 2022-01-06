@@ -65,12 +65,26 @@ class TransformerEncoderLayerBase(nn.Module):
             self.quant_noise_block_size,
         )
 
+        self.gamma = cfg.gamma
+        self.new_init = cfg.new_init
+
         self.final_layer_norm = LayerNorm(self.embed_dim, export=cfg.export)
+
+        if new_init:
+            CW=1.0
+            CX=2.0*(1.0-self.gamma*self.gamma)
+            S = self.embed_dim
+            MLP_multiplier = cfg.encoder.ffn_embed_dim / S 
+            nn.init.uniform_(self.fc1.weight, -np.sqrt(3.0*CW/S), np.sqrt(3.0*CW/S))
+            nn.init.uniform_(self.fc2.weight, -np.sqrt(3.0*CX/(MLP_multiplier*S)), np.sqrt(3.0*CX/(MLP_multiplier*S)))
+            torch.nn.init.zeros_(self.fc1.bias)
+            torch.nn.init.zeros_(self.fc2.bias)
 
     def build_fc1(self, input_dim, output_dim, q_noise, qn_block_size):
         return quant_noise(
             nn.Linear(input_dim, output_dim), p=q_noise, block_size=qn_block_size
         )
+
 
     def build_fc2(self, input_dim, output_dim, q_noise, qn_block_size):
         return quant_noise(
@@ -85,10 +99,13 @@ class TransformerEncoderLayerBase(nn.Module):
             self_attention=True,
             q_noise=self.quant_noise,
             qn_block_size=self.quant_noise_block_size,
+            new_init=cfg.new_init,
+            gamma=self.gamma
         )
 
     def residual_connection(self, x, residual):
-        return residual + x
+        # residual is the identity part, which gets multiplied by gamma
+        return self.gamma*residual + x
 
     def upgrade_state_dict_named(self, state_dict, name):
         """
@@ -279,6 +296,18 @@ class TransformerDecoderLayerBase(nn.Module):
 
         self.onnx_trace = False
 
+        self.gamma = cfg.gamma
+
+        if new_init:
+            CW=1.0
+            CX=2.0*(1.0-self.gamma*self.gamma)
+            S = self.embed_dim
+            MLP_multiplier = cfg.encoder.ffn_embed_dim / S 
+            nn.init.uniform_(self.fc1.weight, -np.sqrt(3.0*CW/S), np.sqrt(3.0*CW/S))
+            nn.init.uniform_(self.fc2.weight, -np.sqrt(3.0*CX/(MLP_multiplier*S)), np.sqrt(3.0*CX/(MLP_multiplier*S)))
+            torch.nn.init.zeros_(self.fc1.bias)
+            torch.nn.init.zeros_(self.fc2.bias)
+
     def build_fc1(self, input_dim, output_dim, q_noise, qn_block_size):
         return quant_noise(nn.Linear(input_dim, output_dim), q_noise, qn_block_size)
 
@@ -297,6 +326,8 @@ class TransformerDecoderLayerBase(nn.Module):
             self_attention=not cfg.cross_self_attention,
             q_noise=self.quant_noise,
             qn_block_size=self.quant_noise_block_size,
+            new_init=cfg.new_init,
+            gamma=self.gamma
         )
 
     def build_encoder_attention(self, embed_dim, cfg):
@@ -309,13 +340,16 @@ class TransformerDecoderLayerBase(nn.Module):
             encoder_decoder_attention=True,
             q_noise=self.quant_noise,
             qn_block_size=self.quant_noise_block_size,
+            new_init=cfg.new_init,
+            gamma=self.gamma
         )
 
     def prepare_for_onnx_export_(self):
         self.onnx_trace = True
 
     def residual_connection(self, x, residual):
-        return residual + x
+        # residual is the identity part, which gets multiplied by gamma
+        return self.gamma*residual + x
 
     def forward(
         self,
