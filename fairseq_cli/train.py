@@ -96,6 +96,7 @@ def main(cfg: FairseqConfig) -> None:
 
     # print(cfg)
     logger.info(model)
+    logger.info(cfg.model)
     logger.info('is flushed?')
     params = model.parameters()
     print(params[0])
